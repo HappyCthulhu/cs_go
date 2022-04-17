@@ -87,11 +87,15 @@ button_colour = (76, 175, 80)
 
 app = wx.App(False)
 width, height = wx.GetDisplaySize()
+print(width, height)
 telegram = get_notifier('telegram')
 
-# switch_from_cs_window()
 
-time.sleep(2)
+time.sleep(4)
+
+image = ImageGrab.grab()
+start_colour_of_screen_center = image.getpixel((width / 2, height / 2))
+# switch_from_cs_window()
 
 while not check_existing_of_pixels_with_button_colour(width, height):
     pass
@@ -99,7 +103,18 @@ while not check_existing_of_pixels_with_button_colour(width, height):
 button_coordinates: list = get_button_coordinates(width, height)
 button_center = get_center_of_the_button(button_coordinates)
 pyautogui.click(*button_center, interval=0.5, clicks=5)
-telegram.notify(message=f'Bro, i just click the button. Get ready to play!', token=os.environ['TELEGRAM_KEY'],
+telegram.notify(message=f'Bro, i just click the button. I hope other players will accept game request!', token=os.environ['TELEGRAM_KEY'],
                 chat_id=os.environ['TELEGRAM_CHAT_ID'])
 
 # switch_from_cs_window()
+time.sleep(25)
+colour_of_screen_center = image.getpixel((width / 2, height / 2))
+if colour_of_screen_center == start_colour_of_screen_center:
+    telegram.notify(message=f'Some idiot did`nt press join button...', token=os.environ['TELEGRAM_KEY'],
+                    chat_id=os.environ['TELEGRAM_CHAT_ID'])
+
+else:
+    telegram.notify(message=f'All players excepted join request 2 the game! Get ready to play!', token=os.environ['TELEGRAM_KEY'],
+                    chat_id=os.environ['TELEGRAM_CHAT_ID'])
+
+switch_from_cs_window()
